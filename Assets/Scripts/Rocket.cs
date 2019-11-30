@@ -124,18 +124,23 @@ public class Rocket : MonoBehaviour
 
     private void Rotate()
     {
-        //  Freeze rotation when there is no user input
-        rigidbody.freezeRotation = true;
+        float rotationThisFrame = rotationMultiplier * Time.deltaTime;
 
         if (Input.GetKey(KeyCode.A))
         {
-            transform.Rotate(Vector3.forward * rotationMultiplier * Time.deltaTime);
+            RotateManually(rotationThisFrame);
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            transform.Rotate(-Vector3.forward * rotationMultiplier * Time.deltaTime);
+            RotateManually(-rotationThisFrame);
         }
+    }
 
+    private void RotateManually(float rotationThisFrame)
+    {
+        //  Freeze rotation when there is no user input
+        rigidbody.freezeRotation = true;
+        transform.Rotate(Vector3.forward * rotationThisFrame);
         rigidbody.freezeRotation = false;
     }
 
@@ -148,9 +153,14 @@ public class Rocket : MonoBehaviour
         else
         {
             //  Stop engine sound and particle when there is no input
-            audioSource.Stop();
-            mainEngineParticle.Stop();
+            StopThrust();
         }
+    }
+
+    private void StopThrust()
+    {
+        audioSource.Stop();
+        mainEngineParticle.Stop();
     }
 
     private void ApplyThrust()
